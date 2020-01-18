@@ -21,9 +21,22 @@
       <div class="container">
         <a href="#" class="brand-logo">Logo</a>
         <ul class="right hide-on-med-and-down">
+
+          <li>
+            <a href="/profile">Profile</a>
+          </li>
           <li>
             <a href="/">Homepage</a>
           </li>
+          <% if(user){ %>
+          <li>
+            <a href="/logout">Logout</a>
+          </li>
+          <% }else{ %>
+          <li>
+            <a href="/auth/login">Login</a>
+          </li>
+          <% }%>
         </ul>
       </div>
     </nav>

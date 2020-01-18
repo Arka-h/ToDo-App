@@ -2,6 +2,7 @@
 const router = require("express").Router();
 const passport = require("passport");
 const googleRouters = require("./auth-google-routes");
+
 // auth login
 router.get("/login", (req, res) => {
   res.render("login");
@@ -13,8 +14,10 @@ router.use("/google", googleRouters);
 // auth logout
 router.get("/logout", (req, res) => {
   //handle with passport
+  req.logout();
+  res.redirect('/');
+}); 
+//TODO :find out what send does, why not post?
 
-  res.send("logging out...");
-});
 
 module.exports = router;
