@@ -15,7 +15,7 @@
     "materialize-css": "^1.0.0-rc.2",
     "mongoose": "^5.8.7",
     "passport": "^0.4.1",
-    "passport-google-oauth20": "^2.0.0"
+    "passport-google-oauth20": "^2.0.0" 
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
