@@ -1,6 +1,5 @@
 //https://youtu.be/or1_A4sJ-oY
 const router = require("express").Router();
-const passport = require("passport");
 const googleRouters = require("./auth-google-routes");
 
 // auth login

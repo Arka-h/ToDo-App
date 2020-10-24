@@ -2,3 +2,4 @@
 */node_modules
 # deployment keys
 */keys
+*/.env
