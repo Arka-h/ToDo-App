@@ -27,13 +27,13 @@ class Auth extends React.Component {
    render() {
     return (
       <>
-        <Container className="mt--8 pb-5">
+        <Container className="mt--8 pb-5" >
           <Row className="justify-content-center">
             <Switch>
               <Route path="/auth/login" component={Login}></Route>
               <Redirect from="/*" to="/auth/login" />
             </Switch>
-          </Row>
+            </Row>
         </Container>
       </>
     );

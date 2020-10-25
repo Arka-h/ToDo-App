@@ -10,11 +10,10 @@ import Axios from "axios";
 
 ReactDOM.render(
   <>
-  <div className='bg'/>
   <BrowserRouter>
     <Switch>
-      <Route path="/todo" render={(props) => <ToDoLayout {...props} />} />
       <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
+      <Route path="/todo" render={(props) => <ToDoLayout {...props} />} />
       <Redirect from="/*" to="/auth" />
     </Switch>
   </BrowserRouter>

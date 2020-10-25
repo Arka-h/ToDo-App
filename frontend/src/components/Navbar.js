@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import defaultProfile from '../assets/img/brand/profile.jpg'
-import Axios from 'axios'
+import defaultProfile from "../assets/img/brand/profile.jpg";
+import Axios from "axios";
 import {
   Navbar,
   NavbarBrand,
@@ -18,11 +18,9 @@ import {
   NavbarText,
 } from "reactstrap";
 
-{/*  */}
-
 export function ToDoNavbar(props) {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(props)
+  console.log(props);
   const toggle = () => setIsOpen(!isOpen);
   const logout = () => {
     Axios({
@@ -35,9 +33,7 @@ export function ToDoNavbar(props) {
   return (
     <>
       <Navbar dark color="dark" light expand="md">
-        <NavbarBrand href="/">
-          TODO App
-        </NavbarBrand>
+        <NavbarBrand href="/">TODO App</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
@@ -50,11 +46,22 @@ export function ToDoNavbar(props) {
           <Nav pullRight navbar>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
-              <img className="rounded-circle responsive-img mr-3" src={ props.thumbnail || defaultProfile } width="40px" alt="DP"/>
-                {props.err==='' ? props.username : 'User'}
+                <img
+                  className="rounded-circle responsive-img mr-3"
+                  src={props.thumbnail || defaultProfile}
+                  width="40px"
+                  alt="DP"
+                />
+                {props.err === "" ? props.username : "User"}
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem onClick={()=>{logout()}}>LogOut</DropdownItem>
+                <DropdownItem
+                  onClick={() => {
+                    logout();
+                  }}
+                >
+                  LogOut
+                </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>

@@ -1,11 +1,31 @@
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Container } from "reactstrap";
+import {
+  Container,
+  Jumbotron,
+  ButtonGroup,
+  InputGroup,
+  InputGroupAddon,
+  Label,
+  InputGroupText,
+  Input,
+  Button,
+  ListGroup,
+  ListGroupItem,
+} from "reactstrap";
 import { ToDoNavbar } from "../components/Navbar";
 import loading from "../assets/img/icons/common/loading.gif";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "@fortawesome/fontawesome-free";
+import "@fortawesome/fontawesome-svg-core";
+import {
+  faCloudUploadAlt,
+  faPlusCircle,
+} from "@fortawesome/free-solid-svg-icons";
 const Todo = (props) => {
   const [User, setUser] = useState({ err: "No information" });
-
+  const [userTodos, setUserTodos] = useState("");
+  const [New, setNew] = useState("");
   const getUser = async (setUser) => {
     //get the user details
     const res = await Axios({
@@ -19,10 +39,69 @@ const Todo = (props) => {
     getUser(setUser);
   }, []);
 
-  return User ? (
+  const addNewTodo = (text)=>{
+    const compt = <>{text}</>
+    // get the component ready and place the text 
+    setUserTodos([...userTodos, ]) //update the userTodos
+  }
+// TODO : Complete the creation of component
+
+  return User.err === "" ? (
     <>
       <ToDoNavbar {...User} />
-      <Container fluid></Container>
+      <Container fluid>
+        <Jumbotron fluid className="pb-4">
+          <Container fluid>
+            <Button
+              color="primary"
+              onClick={() => {
+                window.location.href = "/auth/google";
+              }}
+              className="float-right float-top mt-2"
+            >
+              <FontAwesomeIcon
+                icon={faCloudUploadAlt}
+                className="mr-2"
+                size="1x"
+              />
+              Save
+            </Button>
+            <h1 className="display-5">My Todos</h1>
+            <hr className="my-1" />
+            <p>
+              <li>Tap to edit a todo</li>
+              <li>Save todos in cloud, by hitting 'Save'</li>
+            </p>
+            <p className="lead">
+              <InputGroup size='lg'>
+                <InputGroupAddon addonType="prepend">
+                  <InputGroupText>+ </InputGroupText>
+                </InputGroupAddon>
+                <Input placeholder="Todo Content" onChange={(e)=>{setNew(e.currentTarget.textContent)}}/>
+                <InputGroupAddon addonType="append">
+                  <Button color="success" onClick={(e) => {addNewTodo()}}>
+                    <FontAwesomeIcon
+                      icon={faPlusCircle}
+                      className="mr-2"
+                      size="1x"
+                    />
+                    Add
+                  </Button>
+                </InputGroupAddon>
+              </InputGroup>
+            </p>
+          </Container>
+        </Jumbotron>
+        {/* End of the upper part of the UI */}
+        <ListGroup>
+        {/* {userTodos} */}
+        <ListGroupItem><Input type='checkbox'/><Label>Cras justo odio</Label></ListGroupItem>
+      <ListGroupItem>Dapibus ac facilisis in</ListGroupItem>
+      <ListGroupItem>Morbi leo risus</ListGroupItem>
+      <ListGroupItem>Porta ac consectetur ac</ListGroupItem>
+      <ListGroupItem>Vestibulum at eros</ListGroupItem>
+        </ListGroup>
+      </Container>
     </>
   ) : (
     <>
