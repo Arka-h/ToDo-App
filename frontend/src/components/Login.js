@@ -1,16 +1,8 @@
 import React from "react";
 import { Jumbotron, ButtonGroup, Button } from "reactstrap";
 import Google from "../assets/img/icons/common/google.svg";
-import axios from "axios";
+
 export function Login(props) {
-  const login = async () => {
-    const res = await axios({
-      method: "GET",
-      url: "http://localhost:4000/auth/google",
-    //   withCredentials: true,
-    });
-    console.log(res);
-  };
   return (
     <>
       <Jumbotron>
@@ -28,15 +20,15 @@ export function Login(props) {
             <Button
               color="primary"
               onClick={() => {
-                login();
+                window.location.href = "/auth/google";
               }}
             >
               Login with Google
             </Button>
           </ButtonGroup>
+          <a href="/auth/google">Login</a>
         </p>
       </Jumbotron>
     </>
   );
 }
-

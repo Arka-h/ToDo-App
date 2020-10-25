@@ -2,11 +2,6 @@
 const router = require("express").Router();
 const googleRouters = require("./auth-google-routes");
 
-// auth login
-router.get("/login", (req, res) => {
-  res.render("login");
-});
-
 // auth with google
 router.use("/google", googleRouters);
 
@@ -14,7 +9,7 @@ router.use("/google", googleRouters);
 router.get("/logout", (req, res) => {
   //handle with passport
   req.logout();
-  res.redirect('/');
+  res.send(req.user);
 }); 
 
 

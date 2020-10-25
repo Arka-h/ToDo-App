@@ -1,55 +1,54 @@
-const mongoose = require('mongoose')
-const express = require('express')
-const cors = require('cors')
-const passport = require('passport') // use the same instance of passport throughout the entire server
-const cookieParser = require('cookie-parser')
-const session = require('express-session')
+const mongoose = require("mongoose");
+const express = require("express");
+const cors = require("cors");
+const passport = require("passport"); // use the same instance of passport throughout the entire server
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 const bodyParser = require('body-parser')
-const app = express()
-const mongoURL = require('./keys/dbKeys')
+const app = express();
+const mongoURL = require("./keys/dbKeys");
 const authRoutes = require("./routes/auth-routes");
 const fetchTodos = require("./routes/fetchTodos");
-    //------------------------------------------------MONGOOSE & GRIDFS-----------------------------------------------------------
-mongoose.connect(mongoURL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    },
-    () => {
-        console.log('Mongoose is connected!')
-    })
+//------------------------------------------------MONGOOSE & GRIDFS-----------------------------------------------------------
+mongoose.connect(
+  mongoURL,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  () => {
+    console.log("Mongoose is connected!");
+  }
+);
 
 //------------------------------------------------------MIDDLEWARE--------------------------------------------------------------
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-
-app.use(cors())
-
+app.use(cors());
 app.use(cookieParser('secretcode'))
-app.use(session({
+app.use(
+  session({
     secret:'secretcode',
     maxAge: 30 * 24 * 60 * 60 * 1000,
     resave : true,
     saveUninitialized : true,
-}))
+  })
+);
 
-
-
-app.use(passport.initialize())
-app.use(passport.session())
-require('./passport/googleFlow')(passport)
+app.use(passport.initialize());
+app.use(passport.session());
+require("./passport/googleFlow")(passport);
 
 //----------------------------------------------------ROUTES-------------------------------------------------------------------
-
 
 app.use("/auth", authRoutes);
 app.use("/fetch", fetchTodos);
 
-
 //-----------------------------------------------------SERVER LISTENING PORT-------------------------------------------------------------------
 
 app.listen(4000, () => {
-    console.log('Server has started..')
-})
+  console.log("Server has started..");
+});
 
 // ------------------------------------------------------PLAN-------------------------------------------------------------------
 /**
