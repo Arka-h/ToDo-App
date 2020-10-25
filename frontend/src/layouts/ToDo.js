@@ -21,6 +21,7 @@ import "@fortawesome/fontawesome-svg-core";
 import {
   faCloudUploadAlt,
   faPlusCircle,
+  faMinusCircle
 } from "@fortawesome/free-solid-svg-icons";
 const Todo = (props) => {
   const [User, setUser] = useState({ err: "No information" });
@@ -39,12 +40,12 @@ const Todo = (props) => {
     getUser(setUser);
   }, []);
 
-  const addNewTodo = (text)=>{
-    const compt = <>{text}</>
-    // get the component ready and place the text 
-    setUserTodos([...userTodos, ]) //update the userTodos
-  }
-// TODO : Complete the creation of component
+  const addNewTodo = (text) => {
+    const compt = <>{text}</>;
+    // get the component ready and place the text
+    setUserTodos([...userTodos]); //update the userTodos
+  };
+  // TODO : Complete the creation of component
 
   return User.err === "" ? (
     <>
@@ -73,13 +74,23 @@ const Todo = (props) => {
               <li>Save todos in cloud, by hitting 'Save'</li>
             </p>
             <p className="lead">
-              <InputGroup size='lg'>
+              <InputGroup size="lg">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>+ </InputGroupText>
                 </InputGroupAddon>
-                <Input placeholder="Todo Content" onChange={(e)=>{setNew(e.currentTarget.textContent)}}/>
+                <Input
+                  placeholder="Todo Content"
+                  onChange={(e) => {
+                    setNew(e.currentTarget.textContent);
+                  }}
+                />
                 <InputGroupAddon addonType="append">
-                  <Button color="success" onClick={(e) => {addNewTodo()}}>
+                  <Button
+                    color="success"
+                    onClick={(e) => {
+                      addNewTodo();
+                    }}
+                  >
                     <FontAwesomeIcon
                       icon={faPlusCircle}
                       className="mr-2"
@@ -94,12 +105,33 @@ const Todo = (props) => {
         </Jumbotron>
         {/* End of the upper part of the UI */}
         <ListGroup>
-        {/* {userTodos} */}
-        <ListGroupItem><Input type='checkbox'/><Label>Cras justo odio</Label></ListGroupItem>
-      <ListGroupItem>Dapibus ac facilisis in</ListGroupItem>
-      <ListGroupItem>Morbi leo risus</ListGroupItem>
-      <ListGroupItem>Porta ac consectetur ac</ListGroupItem>
-      <ListGroupItem>Vestibulum at eros</ListGroupItem>
+          {/* {userTodos} */}
+          <ListGroupItem>
+            <InputGroup>
+              <InputGroupAddon addonType="prepend">
+                <InputGroupText>
+                  <Input addon type="checkbox" />
+                </InputGroupText>
+              </InputGroupAddon>
+              <Input placeholder="text" />
+              <InputGroupAddon addonType="append">
+                <Button color="danger">
+                <FontAwesomeIcon
+                      icon={faMinusCircle}
+                      size="1x"
+                    />
+                </Button>
+              </InputGroupAddon>
+            </InputGroup>
+          </ListGroupItem>
+          </ListGroup>
+          <hr className='mt-2 mb-2'/>
+          <Label className='mb-3'>Completed</Label>
+          <ListGroup>
+          <ListGroupItem>Dapibus ac facilisis in</ListGroupItem>
+          <ListGroupItem>Morbi leo risus</ListGroupItem>
+          <ListGroupItem>Porta ac consectetur ac</ListGroupItem>
+          <ListGroupItem>Vestibulum at eros</ListGroupItem>
         </ListGroup>
       </Container>
     </>
