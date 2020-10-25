@@ -22,10 +22,7 @@ mongoose.connect(mongoURL, {
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.use(cors({
-    origin: "http://localhost:3000", // <-- location of the react app we're connecting
-    credentials: true
-}))
+app.use(cors())
 
 app.use(cookieParser('secretcode'))
 app.use(session({

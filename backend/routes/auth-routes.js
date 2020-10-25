@@ -16,7 +16,6 @@ router.get("/logout", (req, res) => {
   req.logout();
   res.redirect('/');
 }); 
-//TODO :find out what send does, why not post?
 
 
 module.exports = router;

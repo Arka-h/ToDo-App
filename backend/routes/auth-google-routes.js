@@ -11,7 +11,7 @@ router.get(
 //auth callback --> get the code to exchange for info
 router.get("/redirect", passport.authenticate("google"), (req, res) => {
   console.log(res)
-  res.redirect("/profile");
+  res.redirect("http://localhost:3000/todo");
 });
 
 module.exports = router;
