@@ -6,10 +6,8 @@ const user = new Schema({
     username : String,
     googleID : String,
     thumbnail: String,
-    Todos: [{
-        finished: Boolean,
-        content: String
-    }]
+    pendingTodos: [String],
+    completedTodos:[String],
 })
 // creating a user model class using .model(name,schema)
 const User = mongoose.model('user',user) //name, schema

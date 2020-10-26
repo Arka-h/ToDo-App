@@ -20,7 +20,6 @@ import {
 
 export function ToDoNavbar(props) {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(props);
   const toggle = () => setIsOpen(!isOpen);
   const logout = () => {
     Axios({
