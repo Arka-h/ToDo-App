@@ -114,7 +114,7 @@ const Todo = (props) => {
     }
   };
 
-  const updateState = (search,replace,strike)=>{
+const updateState = (search,replace,strike)=>{
     if (strike) {
       //completed
       setCompletedTodos((prevState) => {
@@ -125,16 +125,23 @@ const Todo = (props) => {
         );
         return prevState;
       });
+      
     } else {
       //pending
+      console.log(`Hi! I'm not striked`)
       setPendingTodos((prevState) => {
+      console.log(`Hi! I'm finding Index`)
         const index = prevState.findIndex((item) => item === search)
-        prevState[index] = replace
-        setPendingTodoTable(
-          prevState.map((item) => generateListComponent(item, 0))
-        );
+        if(index >=0){
+          prevState[index] = replace
+          // prev state is updating in parent component
+          setPendingTodoTable(
+            prevState.map((item) => generateListComponent(item, 0))
+          );
+        }
         return prevState;
       });
+      
     }
   }
 // make a test

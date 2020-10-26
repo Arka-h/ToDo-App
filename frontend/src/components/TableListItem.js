@@ -1,4 +1,5 @@
-import React,{useRef, useState} from "react";
+import React, { useRef, useState } from "react";
+import { useStateWithCallbackLazy } from "use-state-with-callback";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "@fortawesome/fontawesome-free";
@@ -9,13 +10,26 @@ export default function TableListitem({
   strike,
   toggleCompleted,
   deleteItem,
-  updateState
+  updateState,
 }) {
-  const [editable, setEditable] = useState(0)
-  const [prev, setPrev] = useState('')
-  const [changed, setChanged]= useState('')
-  const inputRef = useRef()
+  const [editable, setEditable] = useState(0);
+  const [prev, setPrev] = useStateWithCallbackLazy("");
+  const [changed, setChanged] = useStateWithCallbackLazy("");
+  const inputRef = useRef();
 
+  const setVal = () => {
+    if (editable) {
+      //editable is true,capture the input into change
+      setChanged(inputRef.current.innerText,(changed)=>{
+        console.log("changed", changed);
+        updateState(prev, changed, strike);
+      });
+    } else {
+      // editable is false, capture the input into prev
+      setPrev(inputRef.current.innerText);
+    }
+    setEditable((edit) => !edit);
+  };
   return (
     <>
       <tr>
@@ -25,22 +39,24 @@ export default function TableListitem({
             toggleCompleted(text, strike, editable);
           }}
         >
-          {strike ? <div contentEditable={editable} ref={inputRef} ><strike>{text}</strike></div> : <div contentEditable={editable} ref={inputRef} >{text}</div>}
+          {strike ? (
+            <div contentEditable={editable} ref={inputRef}>
+              <strike>{text}</strike>
+            </div>
+          ) : (
+            <div contentEditable={editable} ref={inputRef}>
+              {text}
+            </div>
+          )}
         </td>
         <td>
-          <a href="#" className="text-success" onClick={(e)=>{
-            if (editable){
-              //editable is true,capture the input into change
-              setChanged(inputRef.current.innerText)
-            }
-            else{
-              // editable is false, capture the input into prev
-              setPrev(inputRef.current.innerText)
-            }
-            // Capture the text rn into the prev variable if edit is false
-            setEditable(edit=>!edit)
-            updateState(prev,changed,strike)
-          }} >
+          <a
+            href="#"
+            className="text-success"
+            onClick={async () => {
+              setVal();
+            }}
+          >
             <FontAwesomeIcon icon={faEdit} size="1x" />
           </a>
         </td>
