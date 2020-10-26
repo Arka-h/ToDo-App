@@ -1,5 +1,6 @@
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useStateWithCallbackLazy } from "use-state-with-callback";
 import {
   Container,
   Jumbotron,
@@ -25,13 +26,16 @@ import {
   faMinusCircle,
   faEdit,
 } from "@fortawesome/free-solid-svg-icons";
+import TableListItem from "../components/TableListItem";
 const Todo = (props) => {
-  const [User, setUser] = useState({ err: "No information" });
-  const [pendingTodos, setPendingTodos] = useState([]);
-  const [completedTodos, setCompletedTodos] = useState([]);
-  const [pendingTodoTable, setPendingTodoTable] = useState([]);
-  const [completedTodoTable, setCompletedTodoTable] = useState([]);
-  const [addTodo, setAddTodo] = useState("");
+  const [User, setUser] = useStateWithCallbackLazy({ err: "No information" });
+  const [pendingTodos, setPendingTodos] = useStateWithCallbackLazy([]);
+  const [completedTodos, setCompletedTodos] = useStateWithCallbackLazy([]);
+  const [pendingTodoTable, setPendingTodoTable] = useStateWithCallbackLazy([]);
+  const [completedTodoTable, setCompletedTodoTable] = useStateWithCallbackLazy(
+    []
+  );
+  const [addTodo, setAddTodo] = useStateWithCallbackLazy("");
 
   // function to get the current user todos
   const getUser = async (setUser) => {
@@ -40,8 +44,20 @@ const Todo = (props) => {
       method: "GET",
       url: "/fetch/user",
     });
-    setUser({ ...res.data, err: "" });
-    // setPendingTodos();
+
+    // If it gets a valid response
+    setUser({ ...res.data, err: "" }, (User) => {
+      setPendingTodos(User.pendingTodos, (pendingTodos) => {
+        setPendingTodoTable(
+          pendingTodos.map((todo) => generateListComponent(todo, 0))
+        );
+      });
+      setCompletedTodos(User.completedTodos, (completedTodos) => {
+        setCompletedTodoTable(
+          completedTodos.map((todo) => generateListComponent(todo, 1))
+        );
+      });
+    });
   };
 
   // Hook it to componentDidMount
@@ -49,98 +65,112 @@ const Todo = (props) => {
     getUser(setUser);
   }, []);
 
-  const saveTodos = () => {
-    //update todos to database here..
+  const saveTodos = async () => {
+    console.log(User._id);
+    const res = await Axios({
+      method: "post",
+      data: {
+        pendingTodos: [...pendingTodos],
+        completedTodos: [...completedTodos],
+        id: User._id,
+      },
+      url: `/fetch/update`,
+    });
+    console.log(res);
   };
-
-  const generatePendingTable = () =>
-    pendingTodos.map((todo) => generateListComponent(todo, 0));
 
   const deleteItem = (text, strike) => {
     if (strike) {
+      //completed
       setCompletedTodos((prevState) => {
-        return prevState.splice(prevState.indexOf(text), 1)
-    });
-      generatePendingTable();
-    } else {
-      setPendingTodos((prevState) => {
-        console.log(prevState)
-        prevState.splice(prevState.indexOf(text), 1);
+        prevState.splice(
+          prevState.findIndex((item) => item === text),
+          1
+        );
+        setCompletedTodoTable(
+          prevState.map((item) => generateListComponent(item, 1))
+        );
+        return prevState;
       });
-      generatePendingTable();
+    } else {
+      //pending
+      setPendingTodos((prevState) => {
+        prevState.splice(
+          prevState.findIndex((item) => item === text),
+          1
+        );
+        setPendingTodoTable(
+          prevState.map((item) => generateListComponent(item, 0))
+        );
+        return prevState;
+      });
     }
   };
+
+  const toggleCompleted = (text, toggle, edit) => {
+    if(!edit){
+      deleteItem(text, toggle);
+      addNewTodo(text, !toggle);
+    }
+  };
+
+  const updateState = (search,replace,strike)=>{
+    if (strike) {
+      //completed
+      setCompletedTodos((prevState) => {
+        const index = prevState.findIndex((item) => item === search)
+        prevState[index] = replace
+        setCompletedTodoTable(
+          prevState.map((item) => generateListComponent(item, 1))
+        );
+        return prevState;
+      });
+    } else {
+      //pending
+      setPendingTodos((prevState) => {
+        const index = prevState.findIndex((item) => item === search)
+        prevState[index] = replace
+        setPendingTodoTable(
+          prevState.map((item) => generateListComponent(item, 0))
+        );
+        return prevState;
+      });
+    }
+  }
+// make a test
+
   // to generate a list component for a particular text
-  const generateListComponent = (text, strike) =>
-    text ? (
-      strike ? (
-        <tr>
-          <td
-            className="col-lg"
-            onClick={() => {
-              console.log("markCompleted(text,)");
-            }}
-          >
-            <strike>{text}</strike>
-          </td>
-          <td>
-            <a href="#" className="text-success" pull="right">
-              <FontAwesomeIcon icon={faEdit} size="1x" />
-            </a>
-          </td>
-          <td>
-            <a
-              href="#"
-              className="text-danger"
-              onClick={() => {
-                deleteItem(text, 0);
-              }}
-            >
-              <FontAwesomeIcon icon={faMinusCircle} size="1x" />
-            </a>
-          </td>
-        </tr>
-      ) : (
-        <tr>
-          <td
-            className="col-lg"
-            onClick={() => {
-              console.log("markCompleted(text,)");
-            }}
-          >
-            {text}
-          </td>
-          <td>
-            <a href="#" className="text-success" pull="right">
-              <FontAwesomeIcon icon={faEdit} size="1x" />
-            </a>
-          </td>
-          <td>
-            <a
-              href="#"
-              className="text-danger"
-              onClick={() => {
-                deleteItem(text, 0);
-              }}
-            >
-              <FontAwesomeIcon icon={faMinusCircle} size="1x" />
-            </a>
-          </td>
-        </tr>
-      )
+  const generateListComponent = (text, strike) =>{
+    // const pass = {generatedListComponent: this,setCompletedTodos,setCompletedTodoTable,setPendingTodos,setPendingTodoTable}
+    return text ? (
+        <TableListItem
+          toggleCompleted={toggleCompleted}
+          text={text}
+          deleteItem={deleteItem}
+          strike={strike}
+          updateState={updateState}
+          
+        />
     ) : null;
+  }
 
   // add the new todo to the pending list
-  const addNewTodo = (text) => {
+  const addNewTodo = (text, strike) => {
     //entry in the database
-    pendingTodos
-      ? setPendingTodos([text, ...pendingTodos])
-      : setPendingTodos([text]);
-
-    setPendingTodoTable((prevState) => [
-      generateListComponent(text, 0),
-      ...prevState,
-    ]); //update the userTodos
+    if (strike) {
+      setCompletedTodos((prevState) => [text, ...prevState]);
+      setCompletedTodoTable((prevState) => [
+        generateListComponent(text, 1),
+        ...prevState,
+      ]);
+    } else {
+      setPendingTodos((prevState) => [text, ...prevState]);
+      setPendingTodoTable((prevState) => [
+        generateListComponent(text, 0),
+        ...prevState,
+      ]);
+    }
+    //update the userTodos
   };
   // TODO : Complete the creation of component
 
@@ -153,7 +183,7 @@ const Todo = (props) => {
             <Button
               color="primary"
               onClick={() => {
-                window.location.href = "/auth/google";
+                saveTodos();
               }}
               className="float-right float-top mt-2"
             >
@@ -185,7 +215,7 @@ const Todo = (props) => {
                   <Button
                     color="success"
                     onClick={(e) => {
-                      addNewTodo(addTodo);
+                      addNewTodo(addTodo, 0);
                     }}
                   >
                     <FontAwesomeIcon

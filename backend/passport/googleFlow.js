@@ -5,12 +5,10 @@ const User = require("../models/Users");
 // this is the User class
 module.exports = function (passport) {
   passport.serializeUser((user, callback) => {
-    console.log("Serializing...",user.id);
     callback(null, user.id);
   });
 
   passport.deserializeUser((id, callback) => {
-    console.log("Deserializing...",id);
     User.findOne({ _id: id }, (err, user) => {
       callback(err, user)});
   }); /* id is taken from the cookie an find by id the user and pass it to us */

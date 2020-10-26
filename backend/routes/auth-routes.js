@@ -9,7 +9,8 @@ router.use("/google", googleRouters);
 router.get("/logout", (req, res) => {
   //handle with passport
   req.logout();
-  res.send(req.user);
+  console.log(req)
+  res.redirect('/')
 }); 
 
 

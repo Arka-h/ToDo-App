@@ -24,10 +24,8 @@ export function ToDoNavbar(props) {
   const logout = () => {
     Axios({
       method: "GET",
-      url: "http://localhost:4000/auth/logout",
-    }).then((res) => {
-      window.location = "/auth";
-    });
+      url: "/auth/logout",
+    })
   };
   return (
     <>
