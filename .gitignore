@@ -1,5 +1,4 @@
 # node modules
 */node_modules
 # deployment keys
-*/keys
 */.env
