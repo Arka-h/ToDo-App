@@ -1,4 +1,5 @@
-# A minimal Todo app with React, Passport and MongoDB
+# Complete ToDo with Auth sessions, pending and completed lists
+Tech Stack : React, Passport and MongoDB
 
 ### Preview
 
